@@ -67,7 +67,7 @@ a:hover {
     </style>
 </head>
 <body>
-    <form id = "loginForm" action="/login" method="get">
+    <form id = "loginForm" action="/login" method="post">
         <h2>Connexion</h2>
         <input type="text" id ="mail" name="mail" placeholder="Email" required>
         <input type="password" id = "mdp" name="mdp" placeholder="Mot de passe" required>
@@ -84,7 +84,7 @@ a:hover {
             
             // Envoyer les données au contrôleur JavaScript
             fetch('/loginUser?mail=' + email + '&mdp=' + password, {
-                method: 'get',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }

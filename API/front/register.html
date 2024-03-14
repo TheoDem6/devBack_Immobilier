@@ -67,7 +67,7 @@ a:hover {
     </style>
 </head>
 <body>
-    <form id="registerForm" action="/createUser" method="get">
+    <form id="registerForm" action="/createUser" method="post">
         <h2>Inscription</h2>
         <input type="text" id="mail" name="mail" placeholder="Email" required>
         <input type="text" id="nom" name="nom" placeholder="Nom d'utilisateur" required>
@@ -85,12 +85,21 @@ a:hover {
             var username = document.getElementById("nom").value;
             var password = document.getElementById("mdp").value;
             
+            // Créer un objet contenant les données à envoyer
+            var formData = {
+                nom: username,
+                mail: email,
+                mdp: password
+            };
+            console.log(formData);
+            
             // Envoyer les données au contrôleur JavaScript
-            fetch('/createUser?nom=' + username + '&mail=' + email + '&mdp=' + password, {
-                method: 'get',
+            fetch('/createUser', {
+                method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(formData) // Convertir l'objet en JSON pour l'envoi
             })
             .then(response => {
                 if (response.ok) {
@@ -105,5 +114,6 @@ a:hover {
             });
         });
     </script>
+    
 </body>
 </html>

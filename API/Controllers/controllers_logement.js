@@ -14,22 +14,37 @@ router.get('/login', async (req, res) => {
 router.get('/register', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/register.html'));
 });
-router.get('/createUser', async (req, res) => {
-    const nom = req.query.nom;
-    const mail = req.query.mail;  
-    const mdp = req.query.mdp; 
+router.post('/createUser', async (req, res) => {
+    console.log(req.body);
+    const nom = req.body.nom;
+    const mail = req.body.mail;  
+    const mdp = req.body.mdp; 
     
-    LogementService.createUser(nom,mail,mdp);
-   
+    try {
+        const userId = await LogementService.createUser(nom, mail, mdp);
+        res.status(200).json({ userId });
+    } catch (error) {
+        console.error("Erreur lors de la création de l'utilisateur :", error);
+        res.status(500).json({ error: "Erreur lors de la création de l'utilisateur" });
+    }
 });
 
-router.get('/loginUser',async(req,res)=>{
-    const mail = req.query.mail;
-    const mdp = req.query.mdp;
+router.post('/loginUser', async (req, res) => {
+    const mail = req.body.mail;
+    const mdp = req.body.mdp;
 
-    LogementService.loginUser(mail,mdp);
+    try {
+        const user = await LogementService.loginUser(mail, mdp);
+        if (user) {
+            res.status(200).json({ message: "Connexion réussie", user });
+        } else {
+            res.status(401).json({ message: "Nom d'utilisateur ou mot de passe incorrect" });
+        }
+    } catch (error) {
+        console.error("Erreur lors de la connexion de l'utilisateur :", error);
+        res.status(500).json({ error: "Erreur lors de la connexion de l'utilisateur" });
+    }
 });
-
 
 
 module.exports = router; // Exportez le routeur
