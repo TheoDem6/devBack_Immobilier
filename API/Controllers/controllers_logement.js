@@ -23,7 +23,7 @@ router.get('/createUser', async (req, res) => {
    
 });
 
-router.get('loginUser',async(req,res)=>{
+router.get('/loginUser',async(req,res)=>{
     const mail = req.query.mail;
     const mdp = req.query.mdp;
 

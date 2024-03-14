@@ -83,7 +83,7 @@ a:hover {
             var password = document.getElementById("mdp").value;
             
             // Envoyer les données au contrôleur JavaScript
-            fetch('/loginUser?nom=' + username + '&mail=' + email + '&mdp=' + password, {
+            fetch('/loginUser?mail=' + email + '&mdp=' + password, {
                 method: 'get',
                 headers: {
                     'Content-Type': 'application/json'

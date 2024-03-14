@@ -1,6 +1,6 @@
 const { get } = require('../Controllers/controllers_logement');
 const model = require('../../Model/connect_db');
-const client =  model.connectToDatabase();
+
 const bcrypt = require('bcrypt');
 
 // Fonction pour crypter le mot de passe
@@ -33,13 +33,19 @@ async function comparePasswords(password, hashedPassword) {
 
 async function createUser(nom, email, mdp) {
     try {
-        
+        const client = await model.connectToDatabase(); // Attendez que la connexion soit établie
+
         const collection = client.db("dpe").collection("td_client");
+        console.log(nom);
+        console.log(email);
+        mdp = await encryptPassword(mdp);
+        console.log(mdp);
+        
         // Création d'un nouvel utilisateur
         const newUser = {
             nom: nom,
             email: email,
-            motDePasse: encryptPassword(mdp)
+            motDePasse: mdp
         };
         // Insertion de l'utilisateur dans la collection
         const result = await collection.insertOne(newUser);
@@ -55,9 +61,11 @@ async function createUser(nom, email, mdp) {
 }
 async function loginUser(email, password) {
     try {
+        const client = await model.connectToDatabase(); // Attendez que la connexion soit établie
         const collection = client.db("dpe").collection("td_client");
         // Trouver l'utilisateur avec l'email fourni
         const user = await collection.findOne({ email: email });
+        console.log(user.motDePasse);
         if (!user) {
             throw new Error("Utilisateur non trouvé.");
         }
