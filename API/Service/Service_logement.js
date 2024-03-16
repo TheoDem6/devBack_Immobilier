@@ -3,30 +3,30 @@ const model = require('../../Model/connect_db');
 
 const bcrypt = require('bcrypt');
 
-// Fonction pour crypter le mot de passe
+
 async function encryptPassword(password) {
     try {
-        // Générer un sel (salt)
+       
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
-        // Crypter le mot de passe avec le sel
+      
         const hashedPassword = await bcrypt.hash(password, salt);
         return hashedPassword;
     } catch (error) {
-        console.error("Erreur lors du cryptage du mot de passe :", error);
-        throw error; // Remonte l'erreur pour la gérer à un niveau supérieur si nécessaire
+        console.error("Erreur lors du chiffrement du mot de passe :", error);
+        throw error; 
     }
 }
 
-// Fonction pour vérifier le mot de passe avec sa version cryptée
+// Fonction pour vérifier le mot de passe avec sa version chiffrée
 async function comparePasswords(password, hashedPassword) {
     try {
-        // Comparer le mot de passe entré avec sa version cryptée
+        // Comparer le mot de passe entré avec sa version chiffrée
         const match = await bcrypt.compare(password, hashedPassword);
         return match;
     } catch (error) {
         console.error("Erreur lors de la comparaison des mots de passe :", error);
-        throw error; // Remonte l'erreur pour la gérer à un niveau supérieur si nécessaire
+        throw error; 
     }
 }
 
@@ -53,9 +53,9 @@ async function createUser(nom, email, mdp) {
         return result.insertedId;
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur :", error);
-        throw error; // Remonte l'erreur pour la gérer à un niveau supérieur si nécessaire
+        throw error; 
     } finally {
-        // Assurez-vous de fermer la connexion après avoir terminé
+      
         //await client.close();
     }
 }
@@ -75,11 +75,11 @@ async function loginUser(email, password) {
             throw new Error("Mot de passe incorrect.");
         }
         console.log("Connexion réussie !");
-        // Vous pouvez renvoyer l'utilisateur ou faire d'autres opérations ici
+       
         return user;
     } catch (error) {
         console.error("Erreur lors de la connexion de l'utilisateur :", error);
-        throw error; // Remonte l'erreur pour la gérer à un niveau supérieur si nécessaire
+        throw error; 
     }
 }
 

@@ -67,7 +67,7 @@ a:hover {
     </style>
 </head>
 <body>
-    <form id="registerForm" action="/createUser" method="post">
+    <form id="registerForm" action="/createUser" method="POST">
         <h2>Inscription</h2>
         <input type="text" id="mail" name="mail" placeholder="Email" required>
         <input type="text" id="nom" name="nom" placeholder="Nom d'utilisateur" required>
@@ -91,25 +91,29 @@ a:hover {
                 mail: email,
                 mdp: password
             };
+            
+            const formDataJsonString = JSON.stringify(formData);
             console.log(formData);
+            console.log(formDataJsonString);
             
             // Envoyer les données au contrôleur JavaScript
             fetch('/createUser', {
-                method: 'post',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
+			        "Accept": "application/json"
                 },
-                body: JSON.stringify(formData) // Convertir l'objet en JSON pour l'envoi
+                body:  formDataJsonString,
             })
             .then(response => {
                 if (response.ok) {
-                    // Le formulaire a été soumis avec succès
-                    // Rediriger ou effectuer toute autre action nécessaire
+                    return formDataJsonString;
                 } else {
                     console.log("Erreur");
                 }
             })
             .catch(error => {
+                
                 console.log("Erreur : ", error);
             });
         });

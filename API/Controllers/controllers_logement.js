@@ -14,15 +14,17 @@ router.get('/login', async (req, res) => {
 router.get('/register', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/register.html'));
 });
-router.post('/createUser', async (req, res) => {
-    console.log(req.body);
-    const nom = req.body.nom;
-    const mail = req.body.mail;  
-    const mdp = req.body.mdp; 
+router.post('/createUser', function (req, res){
+
+    console.log(req);
+    //const nom = req.body.nom;
+    //const mail = req.body.mail;  
+    //const mdp = req.body.mdp; 
+    console.log("marche !!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     
     try {
-        const userId = await LogementService.createUser(nom, mail, mdp);
-        res.status(200).json({ userId });
+        //const userId = LogementService.createUser(nom, mail, mdp);
+        res.status(200).json({ nom:"aaa" });
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur :", error);
         res.status(500).json({ error: "Erreur lors de la création de l'utilisateur" });
@@ -30,6 +32,7 @@ router.post('/createUser', async (req, res) => {
 });
 
 router.post('/loginUser', async (req, res) => {
+   
     const mail = req.body.mail;
     const mdp = req.body.mdp;
 
