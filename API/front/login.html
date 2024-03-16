@@ -81,17 +81,25 @@ a:hover {
             // Récupérer les valeurs des champs
             var email = document.getElementById("mail").value;
             var password = document.getElementById("mdp").value;
+             // Créer un objet contenant les données à envoyer
+             var formData = {
+                mail: email,
+                mdp: password
+            };
             
+            const formDataJsonString = JSON.stringify(formData);
             // Envoyer les données au contrôleur JavaScript
-            fetch('/loginUser?mail=' + email + '&mdp=' + password, {
+            fetch('/loginUser', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    "Content-Type": "application/json",
+			        "Accept": "application/json"
+                },
+                body:  formDataJsonString,
             })
             .then(response => {
                 if (response.ok) {
-                  
+                    return formDataJsonString;
                 } else {
                     console.log("Erreur");
                 }

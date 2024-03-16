@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path'); // Importez path pour utiliser la fonction join
 const router = express.Router();
 const LogementService = require('../Service/Service_logement');
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json();
 
 
 router.get('/', async (req, res) => {
@@ -14,30 +16,27 @@ router.get('/login', async (req, res) => {
 router.get('/register', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/register.html'));
 });
-router.post('/createUser', function (req, res){
-
-    console.log(req);
-    //const nom = req.body.nom;
-    //const mail = req.body.mail;  
-    //const mdp = req.body.mdp; 
-    console.log("marche !!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+router.post('/createUser', jsonParser ,function (req, res){
+    const nom = req.body.nom;
+    const mail = req.body.mail;  
+    const mdp = req.body.mdp; 
     
     try {
-        //const userId = LogementService.createUser(nom, mail, mdp);
-        res.status(200).json({ nom:"aaa" });
+        const userId = LogementService.createUser(nom, mail, mdp);
+        res.status(200).json({ userId });
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur :", error);
         res.status(500).json({ error: "Erreur lors de la création de l'utilisateur" });
     }
 });
 
-router.post('/loginUser', async (req, res) => {
+router.post('/loginUser', jsonParser,function (req, res)  {
    
     const mail = req.body.mail;
     const mdp = req.body.mdp;
 
     try {
-        const user = await LogementService.loginUser(mail, mdp);
+        const user = LogementService.loginUser(mail, mdp);
         if (user) {
             res.status(200).json({ message: "Connexion réussie", user });
         } else {
