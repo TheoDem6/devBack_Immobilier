@@ -93,9 +93,7 @@ a:hover {
             };
             
             const formDataJsonString = JSON.stringify(formData);
-            console.log(formData);
-            console.log(formDataJsonString);
-            
+    
             // Envoyer les données au contrôleur JavaScript
             fetch('/createUser', {
                 method: "POST",

@@ -1,26 +1,17 @@
-// database.js
-const { MongoClient, ServerApiVersion } = require('mongodb');
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
-const uri = "mongodb+srv://theodemany:azerty@cluster0.sdtdgb5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
+//book schema definition
+let ClientSchema = new Schema(
+  {
+    nom: { type: String, required: true },
+    mail: { type: String, required: true },
+    mdp: { type: String, required: true},
+  }, 
+  { 
+    versionKey: false
   }
-});
+);
 
-async function connectToDatabase() {
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB!");
-    return client; // Retourne le client connecté
-  } catch (error) {
-    console.error("Erreur lors de la connexion à la base de données :", error);
-    throw error;
-  }
-}
-
-module.exports = { connectToDatabase };
+//Exports the client for use elsewhere.
+module.exports = mongoose.model('client', ClientSchema);

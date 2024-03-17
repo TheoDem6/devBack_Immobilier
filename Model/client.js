@@ -4,8 +4,8 @@ let Schema = mongoose.Schema;
 //book schema definition
 let ClientSchema = new Schema(
   {
-    nom: { type: String,required: true },
-    mail: { type: String, unique : true, required: true },
+    nom: { type: String, required: true },
+    mail: { type: String, required: true },
     mdp: { type: String, required: true},
   }, 
   { 
