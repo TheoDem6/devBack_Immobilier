@@ -74,7 +74,7 @@ a:hover {
         <input type="password" id="mdp" name="mdp" placeholder="Mot de passe" required>
         <input type="submit" value="S'inscrire">
     </form>
-    <a href="/login">Se connecter</a>
+    <a href="/loginUser">Se connecter</a>
 
     <script>
         document.getElementById("registerForm").addEventListener("submit", function(event) {
@@ -93,9 +93,7 @@ a:hover {
             };
             
             const formDataJsonString = JSON.stringify(formData);
-            console.log(formData);
-            console.log(formDataJsonString);
-            
+    
             // Envoyer les données au contrôleur JavaScript
             fetch('/createUser', {
                 method: "POST",

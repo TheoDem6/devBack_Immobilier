@@ -14,4 +14,4 @@ let ClientSchema = new Schema(
 );
 
 //Exports the client for use elsewhere.
-module.exports = mongoose.model('client', ClientSchema);
+module.exports = mongoose.model('td_client', ClientSchema);
