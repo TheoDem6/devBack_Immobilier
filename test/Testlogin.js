@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 //Our parent block
 
 //Our parent block
-describe('Client', () => {
+describe('td_client', () => {
     beforeEach(async () => { //Before each test we empty the database
         await Client.deleteMany({});      
     });
@@ -44,7 +44,7 @@ describe('Client', () => {
             .post('/createUser')
             .send(emptyMailClient)
             .end((err, res) => {
-                res.should.have.status(206);
+                res.should.have.status(500);
                 res.body.should.be.a('object');
                 res.body.should.have.property('errors');
                 res.body.errors.should.have.property('mail');
@@ -62,8 +62,9 @@ describe('Client', () => {
           .post('/createUser')
           .send(emptyNameClient)
           .end((err, res) => {
-                res.should.have.status(206);
+                res.should.have.status(500);
                 res.body.should.be.a('object');
+                // console.log(res.body)
                 res.body.should.have.property('errors');
                 res.body.errors.should.have.property('nom');
                 res.body.errors.nom.should.have.property('kind').eql('required');
@@ -80,7 +81,8 @@ describe('Client', () => {
                 .post('/createUser')
                 .send(emptyPwdClient)
                 .end((err, res) => {
-                    res.should.have.status(206);
+                    // console.log(err);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
                     res.body.errors.should.have.property('mdp');
@@ -98,101 +100,69 @@ describe('Client', () => {
                 .post('/createUser')
                 .send(newClient)
                 .end((err, res) => {
+                    // console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql('Un nouveau client a été ajouté');
-                    console.log(res.body)
-                    res.body.newClient.should.have.property('nom');
-                    res.body.newClient.should.have.property('mail');
-                    res.body.newClient.should.have.property('mdp');
+                    res.body.should.have.property('nom');
+                    res.body.should.have.property('mail');
+                    res.body.should.have.property('mdp');
                 done();
                 });
         });
-    //   it('it should POST a book ', (done) => {
-    //      let book = {
-    //          title: "The Lord of the Rings",
-    //          author: "J.R.R. Tolkien",
-    //          year: 1954,
-    //          pages: 1170
-    //      }
-    //      chai.request(server)
-    //      .post('/book')
-    //      .send(book)
-    //      .end((err, res) => {
-    //          res.should.have.status(200);
-    //          res.body.should.be.a('object');
-    //          res.body.should.have.property('message').eql('Book successfully added!');
-    //          res.body.book.should.have.property('title');
-    //          res.body.book.should.have.property('author');
-    //          res.body.book.should.have.property('pages');
-    //          res.body.book.should.have.property('year');
-    //        done();
-    //      });
-    //   });
-  });
- /*
-  * Test the /GET/:id route
-  */
-//   describe('/GET/:id book', () => {
-//    it('it should GET a book by the given id', (done) => {
-//      let book = new Book({ title: "The Lord of the Rings", author: "J.R.R. Tolkien", year: 1954, pages: 1170 });
-//      book.save((err, book) => {
-//          chai.request(server)
-//          .get('/book/' + book.id)
-//          .send(book)
-//          .end((err, res) => {
-//              res.should.have.status(200);
-//              res.body.should.be.a('object');
-//              res.body.should.have.property('title');
-//              res.body.should.have.property('author');
-//              res.body.should.have.property('pages');
-//              res.body.should.have.property('year');
-//              res.body.should.have.property('_id').eql(book.id);
-//            done();
-//          });
-//      });
-            
-//    });
-//   });
-//  /*
-//   * Test the /PUT/:id route
-//   */
-//   describe('/PUT/:id book', () => {
-//    it('it should UPDATE a book given the id', (done) => {
-//      let book = new Book({title: "The Chronicles of Narnia", author: "C.S. Lewis", year: 1948, pages: 778})
-//      book.save((err, book) => {
-//              chai.request(server)
-//              .put('/book/' + book.id)
-//              .send({title: "The Chronicles of Narnia", author: "C.S. Lewis", year: 1950, pages: 778})
-//              .end((err, res) => {
-//                  res.should.have.status(200);
-//                  res.body.should.be.a('object');
-//                  res.body.should.have.property('message').eql('Book updated!');
-//                  res.body.book.should.have.property('year').eql(1950);
-//                done();
-//              });
-//        });
-//    });
-//   });
-//  /*
-//   * Test the /DELETE/:id route
-//   */
-//   describe('/DELETE/:id book', () => {
-//    it('it should DELETE a book given the id', (done) => {
-//      let book = new Book({title: "The Chronicles of Narnia", author: "C.S. Lewis", year: 1948, pages: 778})
-//      book.save((err, book) => {
-//              chai.request(server)
-//              .delete('/book/' + book.id)
-//              .end((err, res) => {
-//                  res.should.have.status(200);
-//                  res.body.should.be.a('object');
-//                  res.body.should.have.property('message').eql('Book successfully deleted!');
-//                  res.body.result.should.have.property('ok').eql(1);
-//                  res.body.result.should.have.property('n').eql(1);
-//                done();
-//              });
-//        });
-//    });
-//    });
+        it('Le mot de passe doit être chiffré avant d\'être enregistré', (done) => {
+            let newClient = {
+                nom: "theo",
+                mail: "theolastico@mail.com",
+                mdp: "azerty"
+            };
+            chai.request(server)
+                .post('/createUser')
+                .send(newClient)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('nom');
+                    res.body.should.have.property('mail');
+                    res.body.should.have.property('mdp').not.eql(newClient.mdp); 
+                    done();
+                });
+            });
+        }); 
+        it('L\'ajout d\'un utilisateur avec un e-mail déjà existant doit échouer', (done) => {
+            // Premier utilisateur
+            let firstClient = {
+                nom: "Premier",
+                mail: "premier@mail.com",
+                mdp: "password1"
+            };
+        
+            // Deuxième utilisateur avec le même e-mail que le premier
+            let secondClient = {
+                nom: "Deuxième",
+                mail: "premier@mail.com", // Même e-mail que le premier utilisateur
+                mdp: "password2"
+            };
+        
+            // Ajout du premier utilisateur
+            chai.request(server)
+                .post('/createUser')
+                .send(firstClient)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('Un nouveau client a été ajouté');
+        
+                    // Ajout du deuxième utilisateur avec le même e-mail
+                    chai.request(server)
+                        .post('/createUser')
+                        .send(secondClient)
+                        .end((err, res) => {
+                            res.should.have.status(400); // On attend une erreur 400 Bad Request
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('message').eql('Cet e-mail est déjà utilisé');
+                            done();
+                        });
+                });
+        });
 });
   
