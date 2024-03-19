@@ -8,5 +8,6 @@ npm install body-parser
 npm install chai
 npm install chai-http
 npm install jsonwebtoken
+npm install axios
 
 Installer la version node > 14

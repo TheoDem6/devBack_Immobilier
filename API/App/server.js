@@ -24,13 +24,7 @@ app.use(bodyParser.text());
 app.use(bodyParser.json({ type: 'application/json'})); 
 
 app.use("/", client_controller); // Modification ici
-// app.route("/createUser")
-//     .get(client.getPageRegister)
-//     .post(client.postClient);
 
-// app.route("/loginUser")
-//     .get(client.getPageLogin)
-//     .post(client.postClientLogin)
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

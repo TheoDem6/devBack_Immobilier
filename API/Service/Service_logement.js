@@ -1,89 +1,71 @@
 let mongoose = require('mongoose');
-let client = require('../../Model/client');
-const bcrypt = require('bcrypt');
-const { ValidationError } = require('mongoose');
-const tocken = require('../jwt/tocken');
+const logement = require('../../Model/logement');
+const axios = require('axios');
 
 
-
-
-async function encryptPassword(password) {
+async function getAll(pageNumber = 1, pageSize = 10) {
     try {
-       
-        const saltRounds = 10;
-        const salt = await  bcrypt.genSalt(saltRounds);
-        
-        const hashedPassword =  await bcrypt.hash(password, salt);
+        // Calculer le nombre d'éléments à sauter
+        const skip = (pageNumber - 1) * pageSize;
 
-        return hashedPassword;
+        // Utiliser lean() pour obtenir des objets JavaScript simples
+        const logements = await logement.find({}).skip(skip).limit(pageSize).lean();
+        return logements;
     } catch (error) {
-        console.error("Erreur lors du chiffrement du mot de passe :", error);
-        throw error; 
-    }
-}
-
-async function casErreur(){
-    let err = new Error("mdp")
-    var data = '{ "mdp": { "kind": "required", "path": "mdp"} }'
-    var t = JSON.parse(data)
-    err.errors = t
-    return err;
-}
-
-async function createUser(nom, email, mdpClient) {
-    try {
-        // //Chiffrement du mot de passe
-        if (mdpClient === undefined) {
-            let err = new Error("mdp")
-            var data = '{ "mdp": { "kind": "required", "path": "mdp"} }'
-            var t = JSON.parse(data)
-            err.errors = t
-            let error = casErreur();
-            throw error;
-        }
-        
-        const mdpClientCypher = await encryptPassword(mdpClient);
-
-        // Création du nouveau client
-        const newClient = new client({ nom, mail: email, mdp: mdpClientCypher });
-
-        // Enregistrement du nouveau client
-        const savedClient = await newClient.save();
-
-        console.log('Client enregistré avec succès :', savedClient.mail);
-        return savedClient;
-    } catch (error) {
+        // Gérer les erreurs ici
+        console.error("Erreur lors de la récupération des logements :", error);
         throw error;
     }
 }
-async function loginUser(email, password) {
+async function getCoordinates(address) {
     try {
-        // Trouver l'utilisateur avec l'email fourni
-        const user = await client.findOne({ mail: email });
-        if (!user) {
-            console.log("Utilisateur non trouvé !");
-            return null; // L'utilisateur n'existe pas, retournez null ou lancez une erreur selon vos besoins
+        const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+            params: {
+                q: address,
+                format: 'json',
+                limit: 1
+            }
+        });
+        if (response.data.length > 0) {
+            return {
+                latitude: response.data[0].lat,
+                longitude: response.data[0].lon
+            };
+        } else {
+            throw new Error('Adresse non trouvée');
         }
-        // Vérifier le mot de passe
-        const passwordMatch = await bcrypt.compare(password, user.mdp);
-        if (!passwordMatch) {
-            console.log("Mot de passe incorrect !");
-            return null; // Le mot de passe ne correspond pas, retournez null ou lancez une erreur selon vos besoins
-        }
-
-        // Authentification réussie, retournez l'utilisateur
-        console.log("Utilisateur authentifié :", user.toObject());
-        let userTocken = tocken.transformUserToTocken(user);
-        
-        const genTocken = tocken.generateAccessToken(userTocken);
-        
-        return genTocken;
     } catch (error) {
-        console.error("Erreur lors de la connexion de l'utilisateur :", error);
-        throw error; // Lancez une erreur pour être attrapée par l'appelant
+        console.error('Erreur lors de la récupération des coordonnées:');
+        throw error;
     }
 }
 
+async function enrichWithCoordinates(logements) {
+    try {
+        for (let logement of logements) {
+            const coordinates = await getCoordinates(logement['Adresse_(BAN)']);
+            logement.latitude = coordinates.latitude;
+            logement.longitude = coordinates.longitude;
+        }
+        return logements;
+    } catch (error) {
+        console.error('Erreur lors de l\'enrichissement avec les coordonnées:');
+        throw error;
+    }
+}
 
-module.exports ={createUser,loginUser};
+// Exemple d'utilisation avec votre fonction getLogement
+async function getLogement(code) {
+    try {
+        
+        const logementTab = await logement.find(code).limit(1);
+        const logementsAvecCoordonnees = await enrichWithCoordinates(logementTab);
+        console.log(code);
+        return logementsAvecCoordonnees;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des logements:');
+        throw error;
+    }
+}
 
+module.exports ={getAll,getLogement};

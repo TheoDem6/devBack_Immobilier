@@ -67,13 +67,13 @@ a:hover {
     </style>
 </head>
 <body>
-    <form id = "loginForm" action="/login" method="POST">
+    <form id = "loginForm" action="/logement" method="POST">
         <h2>Connexion</h2>
         <input type="text" id ="mail" name="mail" placeholder="Email" required>
         <input type="password" id = "mdp" name="mdp" placeholder="Mot de passe" required>
         <input type="submit" value="Se connecter">
     </form>
-    <a href="/createUser">S'inscrire</a>
+    <a href="/register">S'inscrire</a>
     <script>
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Empêcher le comportement par défaut du formulaire
@@ -81,27 +81,40 @@ a:hover {
             // Récupérer les valeurs des champs
             var email = document.getElementById("mail").value;
             var password = document.getElementById("mdp").value;
-             // Créer un objet contenant les données à envoyer
-             var formData = {
+            
+            // Créer un objet contenant les données à envoyer
+            var formData = {
                 mail: email,
                 mdp: password
             };
             
             const formDataJsonString = JSON.stringify(formData);
+            
             // Envoyer les données au contrôleur JavaScript
             fetch('/loginUser', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
-			        "Accept": "application/json"
+                    "Accept": "application/json"
                 },
                 body:  formDataJsonString,
             })
             .then(response => {
                 if (response.ok) {
-                    return formDataJsonString;
+                    // Vérifier si la réponse contient un message de succès
+                    return response.json(); // Récupérer le contenu JSON de la réponse
                 } else {
                     console.log("Erreur");
+                }
+            })
+            .then(data => {
+                // Si la réponse indique une connexion réussie
+                if (data && data.success) {
+                    // Rediriger vers la page "/logement"
+                    window.location.href = "/logement";
+                } else {
+                    // Afficher un message d'erreur ou effectuer d'autres actions en cas d'échec de la connexion
+                    console.log("Email ou mot de passe incorrect");
                 }
             })
             .catch(error => {
@@ -109,6 +122,7 @@ a:hover {
             });
         });
     </script>
-   
+    
+    
 </body>
 </html>
