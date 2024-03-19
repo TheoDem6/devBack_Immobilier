@@ -2,6 +2,9 @@ let mongoose = require('mongoose');
 let client = require('../../Model/client');
 const bcrypt = require('bcrypt');
 const { ValidationError } = require('mongoose');
+const tocken = require('../jwt/tocken');
+
+
 
 
 async function encryptPassword(password) {
@@ -9,26 +12,12 @@ async function encryptPassword(password) {
        
         const saltRounds = 10;
         const salt = await  bcrypt.genSalt(saltRounds);
-        console.log("salt");
         
         const hashedPassword =  await bcrypt.hash(password, salt);
-        console.log("hash");
 
         return hashedPassword;
     } catch (error) {
         console.error("Erreur lors du chiffrement du mot de passe :", error);
-        throw error; 
-    }
-}
-
-// Fonction pour vérifier le mot de passe avec sa version chiffrée
-async function comparePasswords(password, hashedPassword) {
-    try {
-        // Comparer le mot de passe entré avec sa version chiffrée
-        const match = await bcrypt.compare(password, hashedPassword);
-        return match;
-    } catch (error) {
-        console.error("Erreur lors de la comparaison des mots de passe :", error);
         throw error; 
     }
 }
@@ -83,8 +72,12 @@ async function loginUser(email, password) {
         }
 
         // Authentification réussie, retournez l'utilisateur
-        console.log("Utilisateur authentifié :", user);
-        return user;
+        console.log("Utilisateur authentifié :", user.toObject());
+        let userTocken = tocken.transformUserToTocken(user);
+        
+        const genTocken = tocken.generateAccessToken(userTocken);
+        
+        return genTocken;
     } catch (error) {
         console.error("Erreur lors de la connexion de l'utilisateur :", error);
         throw error; // Lancez une erreur pour être attrapée par l'appelant
