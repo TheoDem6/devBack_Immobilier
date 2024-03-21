@@ -16,6 +16,9 @@ router.get('/login', async (req, res) => {
 router.get('/', async (req, res) => {
     res.redirect('/login');
 });
+router.get('/logement', async (req, res) => {
+    res.sendFile(path.join(__dirname, '../front/logement.html'));
+});
 
 router.post('/loginUser', async (req, res) => {
     const mail = req.body.mail;
@@ -52,15 +55,14 @@ router.get('/logement',async (req, res) =>{
 
 router.post('/logement/search', async (req, res) => {
     try {
-        console.log(req.body);
         const { codePostal, Etiquette_GES, Etiquette_DPE } = req.body; // Destructuring assignment
-        console.log(codePostal, Etiquette_GES, Etiquette_DPE);
         const searchData = {
             "Code_postal_(BAN)": parseInt(codePostal),
             Etiquette_GES,
             Etiquette_DPE
         };
         let respt = await serviceLogement.getLogement(searchData);
+        console.log(respt);
         res.status(200).json(respt); // Assuming respt contains the response data
     } catch (error) {
         console.error(error);
