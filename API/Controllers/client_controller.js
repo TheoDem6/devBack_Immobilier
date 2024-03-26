@@ -35,7 +35,7 @@ router.get('/logement', async (req, res) => {
  *   post:
  *     summary: Connexion de l'utilisateur
  *     description: Permet à un utilisateur de se connecter avec une adresse e-mail et un mot de passe.
- *  tags: [Utilisateurs]
+ *     tags: [Utilisateurs]
  *     requestBody:
  *       required: true
  *       content:
@@ -168,7 +168,7 @@ router.get('/logement', tocken.authenticateToken, async (req, res) =>{
  *       '500':
  *         description: Erreur lors de la recherche de logement
  */
-router.post('/logement/search', async (req, res) => {
+router.post('/logement/search', tocken.authenticateToken,async (req, res) => {
     try {
         const { codePostal, Etiquette_GES, Etiquette_DPE, Surface_Habitable_Logement, Adresse, Date_Reception_DPE, Date_Etablissement_DPE, Date_Visite_Diagnostiqueur ,AnneeConstruction} = req.body;
         const searchData = {

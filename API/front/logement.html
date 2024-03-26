@@ -105,20 +105,16 @@
                 <option value="G">G</option>
             </select>
             
-<<<<<<< HEAD
             <label for="surfaceHabitable">Surface Habitable du Logement (m²) :</label>
             <input type="text" id="surfaceHabitable" name="surfaceHabitable" value="58.6">
             
             <label for="adresse">Adresse :</label>
             <input type="text" id="adresse" name="adresse" value="Allée des Tilleuls 72300 La Chapelle-d'Aligné">
             
-=======
->>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
             <button type="submit">Rechercher</button>
         </form>
         <div id="result"></div>
     </div>
-<<<<<<< HEAD
 </body>
 </html>
 
@@ -156,29 +152,6 @@
         
     })
 });
-=======
-
-    <script>
-        document.getElementById("searchForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            const codePostal = document.getElementById("codePostal").value;
-            const etiquetteGES = document.getElementById("etiquetteGES").value;
-            const etiquetteDPE = document.getElementById("etiquetteDPE").value;
-            const resultDiv = document.getElementById("result");
-
-            try {
-                const response = await fetch('/logement/search', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        codePostal,
-                        Etiquette_GES: etiquetteGES,
-                        Etiquette_DPE: etiquetteDPE
-                    })
-                });
->>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
                 const data = await response.json();
                 // Afficher la réponse dans le résultat
                 resultDiv.innerHTML = `<p>Résultat de la recherche :</p>
