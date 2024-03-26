@@ -6,44 +6,17 @@ const express = require('express');
 const router = express.Router();
 const tocken = require('../jwt/tocken');
 
-/**
- * @openapi
- * /register:
- *   get:
- *     summary: Page d'inscription
- *     description: Retourne la page d'inscription pour les utilisateurs.
- *     responses:
- *       '200':
- *         description: Page d'inscription
- */
+
 router.get('/register', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/register.html'));
 });
 
-/**
- * @openapi
- * /login:
- *   get:
- *     summary: Page de connexion
- *     description: Retourne la page de connexion pour les utilisateurs.
- *     responses:
- *       '200':
- *         description: Page de connexion
- */
+
 router.get('/login', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/login.html'));
 });
 
-/**
- * @openapi
- * /:
- *   get:
- *     summary: Redirection vers la page de connexion
- *     description: Redirige vers la page de connexion par défaut.
- *     responses:
- *       '302':
- *         description: Redirection vers la page de connexion
- */
+
 router.get('/', async (req, res) => {
     res.redirect('/login');
 });
@@ -51,16 +24,7 @@ router.get('/logement', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/logement.html'));
 });
 
-/**
- * @openapi
- * /logement:
- *   get:
- *     summary: Page des logements
- *     description: Retourne la page des logements.
- *     responses:
- *       '200':
- *         description: Page des logements
- */
+
 router.get('/logement', async (req, res) => {
     res.sendFile(path.join(__dirname, '../front/logement.html'));
 });
@@ -71,6 +35,7 @@ router.get('/logement', async (req, res) => {
  *   post:
  *     summary: Connexion de l'utilisateur
  *     description: Permet à un utilisateur de se connecter avec une adresse e-mail et un mot de passe.
+ *  tags: [Utilisateurs]
  *     requestBody:
  *       required: true
  *       content:
@@ -205,17 +170,12 @@ router.get('/logement', tocken.authenticateToken, async (req, res) =>{
  */
 router.post('/logement/search', async (req, res) => {
     try {
-<<<<<<< HEAD
         const { codePostal, Etiquette_GES, Etiquette_DPE, Surface_Habitable_Logement, Adresse, Date_Reception_DPE, Date_Etablissement_DPE, Date_Visite_Diagnostiqueur ,AnneeConstruction} = req.body;
-=======
-        const { codePostal, Etiquette_GES, Etiquette_DPE } = req.body; // Destructuring assignment
->>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
         const searchData = {
             "Code_postal_(BAN)": parseInt(codePostal),
             Etiquette_GES,
             Etiquette_DPE,
         };
-<<<<<<< HEAD
         
         const additionalData = {
             Date_Reception_DPE,
@@ -228,11 +188,6 @@ router.post('/logement/search', async (req, res) => {
         
         let respt = await serviceLogement.getLogement(searchData, additionalData);
         res.status(200).json(respt);
-=======
-        let respt = await serviceLogement.getLogement(searchData);
-        console.log(respt);
-        res.status(200).json(respt); // Assuming respt contains the response data
->>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
     } catch (error) {
         console.error("Erreur lors de la recherche de logement :", error);
         res.status(500).json({ error: 'Erreur interne du serveur' });
