@@ -47,6 +47,9 @@ router.get('/login', async (req, res) => {
 router.get('/', async (req, res) => {
     res.redirect('/login');
 });
+router.get('/logement', async (req, res) => {
+    res.sendFile(path.join(__dirname, '../front/logement.html'));
+});
 
 /**
  * @openapi
@@ -202,12 +205,17 @@ router.get('/logement', tocken.authenticateToken, async (req, res) =>{
  */
 router.post('/logement/search', async (req, res) => {
     try {
+<<<<<<< HEAD
         const { codePostal, Etiquette_GES, Etiquette_DPE, Surface_Habitable_Logement, Adresse, Date_Reception_DPE, Date_Etablissement_DPE, Date_Visite_Diagnostiqueur ,AnneeConstruction} = req.body;
+=======
+        const { codePostal, Etiquette_GES, Etiquette_DPE } = req.body; // Destructuring assignment
+>>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
         const searchData = {
             "Code_postal_(BAN)": parseInt(codePostal),
             Etiquette_GES,
             Etiquette_DPE,
         };
+<<<<<<< HEAD
         
         const additionalData = {
             Date_Reception_DPE,
@@ -220,6 +228,11 @@ router.post('/logement/search', async (req, res) => {
         
         let respt = await serviceLogement.getLogement(searchData, additionalData);
         res.status(200).json(respt);
+=======
+        let respt = await serviceLogement.getLogement(searchData);
+        console.log(respt);
+        res.status(200).json(respt); // Assuming respt contains the response data
+>>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
     } catch (error) {
         console.error("Erreur lors de la recherche de logement :", error);
         res.status(500).json({ error: 'Erreur interne du serveur' });

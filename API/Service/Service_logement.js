@@ -43,6 +43,7 @@ async function getCoordinates(address) {
 async function enrichWithCoordinates(logements, code) {
     try {
         const coordinates = await getCoordinates(code['Code_postal_(BAN)']);
+<<<<<<< HEAD
         const enrichedLogements = []; // Nouveau tableau pour stocker les logements enrichis
         for (let i = 0; i < logements.length; i++) {
             // Créer un nouvel objet avec les données de base du logement et les coordonnées
@@ -64,6 +65,17 @@ async function enrichWithCoordinates(logements, code) {
             enrichedLogements.push(enrichedLogement); // Ajouter le logement enrichi au nouveau tableau
         }
         return enrichedLogements;
+=======
+        console.log('Coordinates:', coordinates); // Vérifiez les coordonnées récupérées
+        for (let i = 0; i < logements.length; i++) {
+            // Ajouter les données de latitude et longitude à chaque objet de logement
+            logements[i].latitude = coordinates.latitude;
+            logements[i].longitude = coordinates.longitude;
+            console.log('Logement', i, 'Latitude:', logements[i].latitude, 'Longitude:', logements[i].longitude); // Vérifiez les valeurs de latitude et longitude affectées
+        }
+        console.log(logements);
+        return logements;
+>>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
     } catch (error) {
         console.error('Erreur lors de l\'enrichissement avec les coordonnées:');
         throw error;
@@ -72,14 +84,24 @@ async function enrichWithCoordinates(logements, code) {
 
 async function getLogement(code,adresse) {
     try {
+<<<<<<< HEAD
         console.log(adresse);
         let logementTab = await logement.find(code).limit(10);
        logementTab = triTableau(logementTab,adresse);
        
+=======
+        const logementTab = await logement.find(code).limit(10);
+>>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
         if(logementTab.length == 0){
             return "Pas de logement avec ces critères";
         }
         const logementsAvecCoordonnees = await enrichWithCoordinates(logementTab,code);
+<<<<<<< HEAD
+=======
+        console.log("aaaaaaaaaa");
+        console.log(logementsAvecCoordonnees[0].latitude);
+       
+>>>>>>> 22c084f0f00c2a3d81a60384eef63d448bb09c41
         return logementsAvecCoordonnees;
     } catch (error) {
         console.error('Erreur lors de la récupération des logements:');
