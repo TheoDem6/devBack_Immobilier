@@ -28,6 +28,18 @@ Les jetons d'authentification peuvent rencontrer des difficultés avec les pages
 
 Pour accéder à la documentation Swagger, veuillez visiter l'URL suivante : http://localhost:3000/api-docs/.
 
+
+### Lancer le code
+
+Pour lancer le code, il faut se positionner dans le dossier contenant `server.js` qui se situe dans API/App et exécuter la commande suivante :
+
+```bash
+node ./server.js
+```
+Pour lancer les tests (même s'il marche pas)
+```bash
+npm test
+```
 Remarques
 Les tests ne fonctionnent pas pour le moment en raison d'un ajout de code qui a provoqué des erreurs. Cependant, il est intéressant de les examiner.
 
