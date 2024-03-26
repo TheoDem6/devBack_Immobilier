@@ -76,8 +76,9 @@ async function loginUser(email, password) {
         console.log("Utilisateur authentifié :", user.toObject());
         let userTocken = tocken.transformUserToTocken(user);
         
-        const genTocken = tocken.generateAccessToken(userTocken);
         
+        const genTocken = tocken.generateAccessToken(userTocken);
+    
         return genTocken;
     } catch (error) {
         console.error("Erreur lors de la connexion de l'utilisateur :", error);

@@ -67,7 +67,7 @@ a:hover {
     </style>
 </head>
 <body>
-    <form id = "loginForm" action="/logement" method="POST">
+    <form id = "loginForm" action="/loginUser" method="POST">
         <h2>Connexion</h2>
         <input type="text" id ="mail" name="mail" placeholder="Email" required>
         <input type="password" id = "mdp" name="mdp" placeholder="Mot de passe" required>
@@ -92,35 +92,38 @@ a:hover {
             
             // Envoyer les données au contrôleur JavaScript
             fetch('/loginUser', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body:  formDataJsonString,
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Vérifier si la réponse contient un message de succès
-                    return response.json(); // Récupérer le contenu JSON de la réponse
-                } else {
-                    console.log("Erreur");
-                }
-            })
-            .then(data => {
-                // Si la réponse indique une connexion réussie
-                if (data && data.success) {
-                    // Rediriger vers la page "/logement"
-                    window.location.href = "/logement";
-                } else {
-                    // Afficher un message d'erreur ou effectuer d'autres actions en cas d'échec de la connexion
-                    console.log("Email ou mot de passe incorrect");
-                }
-            })
-            .catch(error => {
-                console.log("Erreur : ", error);
-            });
-        });
+    method: 'POST',
+    headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    },
+    body: JSON.stringify(formData),
+})
+.then(response => {
+    if (response.ok) {
+        console.log("la response est :",response);
+        return response.json(); // Récupérer le contenu JSON de la réponse
+    } else {
+        throw new Error("Erreur lors de la connexion");
+    }
+})
+.then(data => {
+    console.log("la data est :",data);
+    // Si la réponse indique une connexion réussie
+    if (data) {
+        // Stocker le token dans le localStorage
+        
+        localStorage.setItem("token", data);
+        // Rediriger vers la page "/logement"
+    } else {
+        console.log("Email ou mot de passe incorrect");
+    }
+})
+.catch(error => {
+    console.error("Erreur lors de la connexion :", error);
+    // Gérer les erreurs réseau ou autres erreurs
+});
+          });
     </script>
     
     

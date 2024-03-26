@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de logement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Recherche de logement</h1>
+        <form id="searchForm">
+            <label for="codePostal">Code Postal :</label>
+            <input type="text" id="codePostal" name="codePostal" value="72300" required>
+            
+            <label for="anneeConstruction">Année de Construction :</label>
+            <input type="text" id="anneeConstruction" name="anneeConstruction" value="2020">
+            
+            <label for="dateReception">Date de Réception DPE :</label>
+            <input type="date" id="dateReception" name="dateReception" value="2022-05-11T00:00:00.000+00:00">
+            
+            <label for="dateEtablissement">Date d'Établissement DPE :</label>
+            <input type="date" id="dateEtablissement" name="dateEtablissement" value="2022-05-09T00:00:00.000+00:00">
+            
+            <label for="dateVisiteDiagnostiqueur">Date de Visite Diagnostiqueur :</label>
+            <input type="date" id="dateVisiteDiagnostiqueur" name="dateVisiteDiagnostiqueur" value="2022-05-09T00:00:00.000+00:00">
+            
+            <label for="etiquetteGES">Étiquette GES :</label>
+            <select id="etiquetteGES" name="etiquetteGES">
+                <option value="A" selected>A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+            </select>
+            
+            <label for="etiquetteDPE">Étiquette DPE :</label>
+            <select id="etiquetteDPE" name="etiquetteDPE">
+                <option value="A" selected>A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+            </select>
+            
+            <label for="surfaceHabitable">Surface Habitable du Logement (m²) :</label>
+            <input type="text" id="surfaceHabitable" name="surfaceHabitable" value="58.6">
+            
+            <label for="adresse">Adresse :</label>
+            <input type="text" id="adresse" name="adresse" value="Allée des Tilleuls 72300 La Chapelle-d'Aligné">
+            
+            <button type="submit">Rechercher</button>
+        </form>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
+
+    <script>
+         document.getElementById("searchForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const codePostal = document.getElementById("codePostal").value;
+        const etiquetteGES = document.getElementById("etiquetteGES").value;
+        const etiquetteDPE = document.getElementById("etiquetteDPE").value;
+        const dateReception = document.getElementById("dateReception").value;
+        const anneeConstruction = document.getElementById("anneeConstruction").value;
+        const dateEtablissement = document.getElementById("dateEtablissement").value;
+        const dateVisiteDiagnostiqueur = document.getElementById("dateVisiteDiagnostiqueur").value;
+        const surfaceHabitable = document.getElementById("surfaceHabitable").value;
+        const adresse = document.getElementById("adresse").value;
+        const resultDiv = document.getElementById("result");
+
+        try {
+            const response = await fetch('/logement/search', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${'token'}`
+    },
+    body: JSON.stringify({
+        codePostal,
+        Etiquette_GES: etiquetteGES,
+        AnneeConstruction: anneeConstruction, // Utilisez la même casse ici
+        Etiquette_DPE: etiquetteDPE,
+        Date_Reception_DPE: dateReception,
+        Date_Etablissement_DPE: dateEtablissement,
+        Date_Visite_Diagnostiqueur: dateVisiteDiagnostiqueur,
+        Surface_Habitable_Logement: surfaceHabitable,
+        Adresse: adresse,
+        
+    })
+});
+                const data = await response.json();
+                // Afficher la réponse dans le résultat
+                resultDiv.innerHTML = `<p>Résultat de la recherche :</p>
+                                       <pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error(error);
+                // Gérer les erreurs ici
+            }
+        });
+    </script>
+</body>
+</html>
